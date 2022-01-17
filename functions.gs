@@ -76,13 +76,13 @@ function getGuildroster() {
   var array_of_arrays = [];
 
   for (var i = 0; i < data_guildroster.members.length; i++) {
-    array_player_ids.push(data_guildroster.members[i].character.id);
+    array_player_ids.push(data_guildroster.members[i].character.id.toString());
     array_player_names.push(data_guildroster.members[i].character.name);
     array_guild_rank.push(data_guildroster.members[i].rank);
     array_player_class.push(data_guildroster.members[i].character.playable_class.id);
   }
   array_of_arrays.push(array_player_ids, array_player_names, array_player_class, array_guild_rank);
-  Logger.log(array_guild_rank);
+  Logger.log(array_player_ids);
 
 }
  // TODO: Item Liste verringern (Conduits/Mounts entfernen und dafür extra Buttons erschaffen: Mounts, Conduits, Transmog, Offspec)
