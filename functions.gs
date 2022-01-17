@@ -2,7 +2,7 @@ function myFunction() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
   // get all encounters of Sanctum of Domination Raid (ID = 1193) and write encounterIDs to array
-  var sod_encounters_api_url = 'https://eu.api.blizzard.com/data/wow/journal-instance/1193?namespace=static-eu&locale=en_US&access_token=USrzS13sWRh1mrJ67hDy9lCHVTIQgZOVBO';
+  var sod_encounters_api_url = 'https://eu.api.blizzard.com/data/wow/journal-instance/1193?namespace=static-eu&locale=en_US&access_token=USdwyf5kopTiQsOPVhKwE3VicyZAGW8PYS';
   var response_sod_encounters = UrlFetchApp.fetch(sod_encounters_api_url);
   var json_response_sod_encounters = response_sod_encounters.getContentText();
   var data_sod_encounters = JSON.parse(json_response_sod_encounters);
@@ -24,12 +24,13 @@ function myFunction() {
     var dropdown = SpreadsheetApp.newDataValidation().requireValueInList(items);
     range.setDataValidation(dropdown);
   }
+  getGuildroster();
 }
 
 function getItemsByEncounter(encounterID) {
   var url = 'https://eu.api.blizzard.com/data/wow/journal-encounter/'
   + encounterID
-  + '?namespace=static-eu&locale=en_US&access_token=USrzS13sWRh1mrJ67hDy9lCHVTIQgZOVBO';
+  + '?namespace=static-eu&locale=en_US&access_token=USdwyf5kopTiQsOPVhKwE3VicyZAGW8PYS';
   var response = UrlFetchApp.fetch(url);
   var json = response.getContentText();
   var data = JSON.parse(json);
@@ -47,7 +48,7 @@ function getItemsByEncounter(encounterID) {
  
 function filterItemsByType(itemlist) {
   var url = 'https://eu.api.blizzard.com/data/wow/item/';
-  var token = '?namespace=static-eu&locale=en_US&access_token=USrzS13sWRh1mrJ67hDy9lCHVTIQgZOVBO';
+  var token = '?namespace=static-eu&locale=en_US&access_token=USdwyf5kopTiQsOPVhKwE3VicyZAGW8PYS';
   var itemID;
   var items = [];
   for (var i = 0; i < itemlist.length; i++) {
@@ -79,24 +80,73 @@ function getGuildroster() {
   for (var i = 0; i < data_guildroster.members.length; i++) {
     if (data_guildroster.members[i].rank.toString() <= 3) {
     array_player_ids.push(data_guildroster.members[i].character.id.toString());
-    array_player_names.push(data_guildroster.members[i].character.name);
-    array_guild_rank.push(data_guildroster.members[i].rank.toString());
-    array_player_class.push(data_guildroster.members[i].character.playable_class.id.toString());
+    //array_player_names.push(data_guildroster.members[i].character.name);
+    //array_guild_rank.push(data_guildroster.members[i].rank.toString());
+    //array_player_class.push(data_guildroster.members[i].character.playable_class.id.toString());
+    array_of_arrays.push([ data_guildroster.members[i].character.name.toString(), data_guildroster.members[i].rank.toString(), data_guildroster.members[i].character.playable_class.id.toString() ]);
     }
   }
-  array_of_arrays.push(array_player_ids , array_player_names, array_player_class, array_guild_rank);
+
+  //array_of_arrays.push(array_player_ids , array_player_names, array_player_class, array_guild_rank);
 
  // ausgabe ?
-
+  var test = array_of_arrays.map(function(value,index) { return [value[0]]; });
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var range_player_names = sheet.getRange(1, 1, 1, array_player_names.length);
-  range_player_names.setValues([ array_of_arrays[1] ]);
+  for (var i = 0; i < array_of_arrays.length; i ++) {
+    var offset = i + 2;
+    var range_test = sheet.getRange("A" + offset.toString());
+    range_test.setValue(array_of_arrays[i][0]);
+    Logger.log(array_of_arrays[i][2]);
+    switch (array_of_arrays[i][2]) {
+      case "1":
+        range_test.setBackground("#926239");
+        break;
+      case "2":
+        range_test.setBackground("#f58cba");
+        break;
+      case "3":
+        range_test.setBackground("#77ac66");
+        break;
+      case "4": 
+        range_test.setBackground("#ffff00"); 
+        break;
+      case "5": 
+        range_test.setBackground("#ffffff"); 
+        break;
+      case "6": 
+        range_test.setBackground("#cc0000"); 
+        break;
+      case "7": 
+        range_test.setBackground("#3c78d8"); 
+        break;
+      case "8": 
+        range_test.setBackground("#9fc5e8"); 
+        break;
+      case "9": 
+        range_test.setBackground("#8e7cc3"); 
+        break;
+      case "10": 
+        range_test.setBackground("#8dffb1");
+        break;
+      case "11": 
+        range_test.setBackground("#f67404"); 
+        break; 
+      case "12":
+        range_test.setBackground("#a330c9"); 
+        break;
+    } 
+  }
+  var range_player_names = sheet.getRange(2, 1, array_of_arrays.length, 1);
+
+  //range_player_names.setBackground("red");
+  //range_player_names.setValues(test);
   range_player_names.setFontFamily('roboto');
   range_player_names.setFontWeight("bold");
   range_player_names.setFontSize(12);
   
-  Logger.log(array_player_names);
+
+ // TODO: 
+ // oauth2 implementieren
+ // Performance verbessern (API Calls schneller machen, fetch mit url + itemID verheiraten gemäß Doku: https://github.com/googleworkspace/apps-script-oauth2#storing-token-related-data)
 
 }
-
- // TODO: Item Liste verringern (Conduits/Mounts entfernen und dafür extra Buttons erschaffen: Mounts, Conduits, Transmog, Offspec)
