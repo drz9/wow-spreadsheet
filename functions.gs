@@ -74,15 +74,29 @@ function getGuildroster() {
   var array_player_class = [];
   var array_guild_rank = [];
   var array_of_arrays = [];
+  
 
   for (var i = 0; i < data_guildroster.members.length; i++) {
+    if (data_guildroster.members[i].rank.toString() <= 3) {
     array_player_ids.push(data_guildroster.members[i].character.id.toString());
     array_player_names.push(data_guildroster.members[i].character.name);
-    array_guild_rank.push(data_guildroster.members[i].rank);
-    array_player_class.push(data_guildroster.members[i].character.playable_class.id);
+    array_guild_rank.push(data_guildroster.members[i].rank.toString());
+    array_player_class.push(data_guildroster.members[i].character.playable_class.id.toString());
+    }
   }
-  array_of_arrays.push(array_player_ids, array_player_names, array_player_class, array_guild_rank);
-  Logger.log(array_player_ids);
+  array_of_arrays.push(array_player_ids , array_player_names, array_player_class, array_guild_rank);
+
+ // ausgabe ?
+
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var range_player_names = sheet.getRange(1, 1, 1, array_player_names.length);
+  range_player_names.setValues([ array_of_arrays[1] ]);
+  range_player_names.setFontFamily('roboto');
+  range_player_names.setFontWeight("bold");
+  range_player_names.setFontSize(12);
+  
+  Logger.log(array_player_names);
 
 }
+
  // TODO: Item Liste verringern (Conduits/Mounts entfernen und dafür extra Buttons erschaffen: Mounts, Conduits, Transmog, Offspec)
