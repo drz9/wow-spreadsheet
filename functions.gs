@@ -63,4 +63,26 @@ function filterItemsByType(itemlist) {
   }
   return items;
 }
+
+function getGuildroster() {
+  var guildroster_api_url = 'https://eu.api.blizzard.com/data/wow/guild/blackmoore/imprecision/roster?namespace=profile-eu&locale=de_DE&access_token=USdwyf5kopTiQsOPVhKwE3VicyZAGW8PYS';
+  var response_guildroster = UrlFetchApp.fetch(guildroster_api_url);
+  var json_response_guildroster = response_guildroster.getContentText();
+  var data_guildroster = JSON.parse(json_response_guildroster);
+  var array_player_ids = [];
+  var array_player_names = [];
+  var array_player_class = [];
+  var array_guild_rank = [];
+  var array_of_arrays = [];
+
+  for (var i = 0; i < data_guildroster.members.length; i++) {
+    array_player_ids.push(data_guildroster.members[i].character.id);
+    array_player_names.push(data_guildroster.members[i].character.name);
+    array_guild_rank.push(data_guildroster.members[i].rank);
+    array_player_class.push(data_guildroster.members[i].character.playable_class.id);
+  }
+  array_of_arrays.push(array_player_ids, array_player_names, array_player_class, array_guild_rank);
+  Logger.log(array_guild_rank);
+
+}
  // TODO: Item Liste verringern (Conduits/Mounts entfernen und dafür extra Buttons erschaffen: Mounts, Conduits, Transmog, Offspec)
