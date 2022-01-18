@@ -66,8 +66,14 @@ function filterItemsByType(itemlist) {
 }
 
 function getGuildroster() {
-  var guildroster_api_url = 'https://eu.api.blizzard.com/data/wow/guild/blackmoore/imprecision/roster?namespace=profile-eu&locale=de_DE&access_token=USdwyf5kopTiQsOPVhKwE3VicyZAGW8PYS';
-  var response_guildroster = UrlFetchApp.fetch(guildroster_api_url);
+  //var guildroster_api_url = 'https://eu.api.blizzard.com/data/wow/guild/blackmoore/imprecision/roster?namespace=profile-eu&locale=de_DE&access_token=USdwyf5kopTiQsOPVhKwE3VicyZAGW8PYS';
+  var driveService = getDriveService();
+  var response_guildroster = UrlFetchApp.fetch('https://eu.api.blizzard.com/data/wow/guild/blackmoore/imprecision/roster', {
+    headers: {
+      "Authorization": 'Bearer ' + driveService.getAccessToken(),
+      "Battlenet-Namespace": 'profile-eu'
+    }
+  });
   var json_response_guildroster = response_guildroster.getContentText();
   var data_guildroster = JSON.parse(json_response_guildroster);
   var array_player_ids = [];
