@@ -4,20 +4,29 @@
     <base target="_top">
   </head>
   <script>
-    function onSuccess(bool) {
-      var div = document.getElementById('output');
-      div.innerHTML = bool;
+    function onFailure() {
+      var div = document.getElementById('input');
+      div.innerHTML =  '<font color="red"> Something went wrong. Please execute the script again. If this error occurs regularly, please contact the developer </font>';
+    }
+    function onSuccess() {
+      var div = document.getElementById('input');
+      div.innerHTML = '<font color="green"> SUCCESS! Enjoy your loot sheet. You may close this window now </font>';
     }
     function buttonClick() {
       var raidID = document.getElementById('id').value;
       var guildName = document.getElementById('guildname').value;
       var realmName = document.getElementById('realmname').value;
-      google.script.run.withSuccessHandler(onSuccess)
+      google.script.run
+          .withSuccessHandler(onSuccess)
+          .withFailureHandler(onFailure)
           .main(raidID, guildName, realmName);
+      var div = document.getElementById('input');
+      div.innerHTML = 'Loot sheet is being generated. This may take up to 3 minutes...'
  }
   
 </script>
   <body>
+    <div id="input">
     Enter Raid ID:
     <input type="number" id="id">
     <br>
@@ -28,6 +37,6 @@
     <input type="text" id="realmname">
     <br>
     <input type="button" class="button" value="Apply" onclick="buttonClick()">
-    <div id="output"></div>
+    </div>
   </body>
 </html>
