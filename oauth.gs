@@ -1,16 +1,15 @@
-function getDriveService() {
+function getDriveService(clientid, clientsecret) {
   // Create a new service with the given name. The name will be used when
   // persisting the authorized token, so ensure it is unique within the
   // scope of the property store.
   return OAuth2.createService('blizzard-api')
-
       // Set the endpoint URLs, which are the same for all Google services.
       .setAuthorizationBaseUrl('https://eu.battle.net/oauth/authorize')
       .setTokenUrl('https://eu.battle.net/oauth/token')
 
       // Set the client ID and secret, from the Google Developers Console.
-      .setClientId('...')
-      .setClientSecret('...')
+      .setClientId(clientid)
+      .setClientSecret(clientsecret)
 
       // Set the name of the callback function in the script referenced
       // above that should be invoked to complete the OAuth flow.
@@ -36,10 +35,13 @@ function getDriveService() {
       .setParam('prompt', 'consent');
 }
 
-function showSidebar() {
-  var driveService = getDriveService();
+function showSidebar(clientid, clientsecret) {
+  var driveService = getDriveService(clientid, clientsecret);
   if (!driveService.hasAccess()) {
-    var authorizationUrl = driveService.getAuthorizationUrl();
+    var authorizationUrl = driveService.getAuthorizationUrl({
+      param1: clientid,
+      param2: clientsecret
+    });
     var template = HtmlService.createTemplate(
         '<a href="<?= authorizationUrl ?>" target="_blank">Authorize</a>. ' +
         'Reopen the sidebar when the authorization is complete.');
@@ -51,7 +53,9 @@ function showSidebar() {
 }
 
 function authCallback(request) {
-  var driveService = getDriveService();
+  var clientid = request.parameter.param1;
+  var clientsecret = request.parameter.param2;
+  var driveService = getDriveService(clientid, clientsecret);
   var isAuthorized = driveService.handleCallback(request);
   if (isAuthorized) {
     return HtmlService.createHtmlOutput('Success! You can close this tab.');
