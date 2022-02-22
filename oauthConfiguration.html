@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <script>
+   function showSidebar() {
+   var clientid = document.getElementById('clientid').value;
+   var clientsecret = document.getElementById('clientsecret').value;
+   google.script.run.showSidebar(clientid, clientsecret);
+ }
+</script>
+  <body>
+    ClientID?
+    <input type="text" id="clientid">
+    <br>
+    Client Secret?
+    <input type="password" id="clientsecret">
+    <br>
+    <input type="button" class="button" value="Apply" onclick="showSidebar();">
+  </body>
+</html>
