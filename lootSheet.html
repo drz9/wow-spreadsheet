@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <script>
+    function onSuccess(bool) {
+      var div = document.getElementById('output');
+      div.innerHTML = bool;
+    }
+    function buttonClick() {
+      var raidID = document.getElementById('id').value;
+      var guildName = document.getElementById('guildname').value;
+      var realmName = document.getElementById('realmname').value;
+      google.script.run.withSuccessHandler(onSuccess)
+          .main(raidID, guildName, realmName);
+ }
+  
+</script>
+  <body>
+    Enter Raid ID:
+    <input type="number" id="id">
+    <br>
+    Enter Guild Name:
+    <input type="text" id="guildname">
+    <br>
+    Enter Realm Name:
+    <input type="text" id="realmname">
+    <br>
+    <input type="button" class="button" value="Apply" onclick="buttonClick()">
+    <div id="output"></div>
+  </body>
+</html>
