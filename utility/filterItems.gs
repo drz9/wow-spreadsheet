@@ -92,6 +92,7 @@ function filterItemsByWeaponType(itemlist) {
           weaponsPaladin.push(data.name)
           weaponsShaman.push(data.name)
           weaponsWarrior.push(data.name)
+          weaponsMonk.push(data.name)
           break
         
         case "7": // one-handed sword
