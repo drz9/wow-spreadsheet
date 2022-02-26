@@ -232,3 +232,92 @@ function filterItemsByArmorType(itemlist) {
   items.push(itemsCloth, itemsMail, itemsPlate, itemsLeather)
   return items
 }
+function filterItemsByTierSet(itemlist) {
+
+  //itemlist = ["191014", "191002", "191003", "191021"]
+
+  var driveService = getDriveService()
+  var url = 'https://eu.api.blizzard.com/data/wow/item/'
+  var tierset = []
+  var tiersetPriest = []
+  var tiersetDK = []
+  var tiersetDH = []
+  var tiersetDruid = []
+  var tiersetRogue = []
+  var tiersetMage = []
+  var tiersetShaman = []
+  var tiersetWarrior = []
+  var tiersetPaladin = []
+  var tiersetHunter = []
+  var tiersetMonk = []
+  var tiersetWarlock = []
+
+  for (var i = 0; i < itemlist.length; i++) {
+    var itemID = itemlist[i]
+    var response = UrlFetchApp.fetch(url + itemID + "?locale=en_US", {
+    headers: {
+      "Authorization": 'Bearer ' + driveService.getAccessToken(),
+      "Battlenet-Namespace": 'static-eu'
+    }
+    })
+    var json = response.getContentText()
+    var data = JSON.parse(json)
+
+    if (data.item_class.name === "Miscellaneous") {
+      for(var j = 0; j < 3; j++) {
+        switch(data.preview_item.requirements.playable_classes.links[j].id.toString()) {
+          case "1":   // Warrior
+          tiersetWarrior.push(data.name)
+          break
+
+          case "2":   // Paladin
+          tiersetPaladin.push(data.name)
+          break
+
+          case "3":   // Hunter
+          tiersetHunter.push(data.name)
+          break
+
+          case "4":     // Rogue
+          tiersetRogue.push(data.name)
+          break
+
+          case "5":     // Priest
+          tiersetPriest.push(data.name)
+          break
+
+          case "6":   // Death Knight
+          tiersetDK.push(data.name)
+          break
+
+          case "7":     // Shaman
+          tiersetShaman.push(data.name)
+          break
+
+          case "8":     // Mage
+          tiersetMage.push(data.name)
+          break
+
+          case "9":     // Warlock
+          tiersetWarlock.push(data.name)
+          break
+
+          case "10":    // Monk
+          tiersetMonk.push(data.name)
+          break
+
+          case "11":    // Druid
+          tiersetDruid.push(data.name)
+          break
+
+          case "12":    // Demon Hunter
+          tiersetDH.push(data.name)
+          break
+        }
+      
+      }
+    }
+  }
+  tierset.push(tiersetDH, tiersetDK, tiersetDruid, tiersetHunter, tiersetMage, tiersetMonk, tiersetPaladin, tiersetPriest, tiersetRogue, tiersetShaman, tiersetWarlock, tiersetWarrior)
+  return tierset
+}
