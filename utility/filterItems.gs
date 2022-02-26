@@ -217,6 +217,11 @@ function filterItemsByArmorType(itemlist) {
           break
         case "Cloth":
           itemsCloth.push(data.name)
+          if (data.inventory_type.type === "CLOAK") {
+            itemsPlate.push(data.name)
+            itemsMail.push(data.name)
+            itemsLeather.push(data.name)
+          }
           break
         case "Leather":
           itemsLeather.push(data.name)
